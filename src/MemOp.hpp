@@ -54,6 +54,17 @@ template <typename T> class EasyPtr {
     EasyPtr(const EasyPtr &other) = delete;
 
     T *data() const { return _ptr; }
+    T *data(EasyDev dev_expected) const {
+        if (dev_expected != _dev) {
+            printf(
+                "[Data Error] : You are trying to access a slice of memory at "
+                "%s:%d, but the device is %s, while you are expecting %s\n",
+                __builtin_FILE(), __builtin_LINE(), to_str(_dev),
+                to_str(dev_expected));
+            exit(-1);
+        }
+        return _ptr;
+    }
     size_t size() const { return _size; }
     EasyDev dev() const { return _dev; }
 
@@ -179,8 +190,6 @@ template <typename T> class EasyPtr {
         }
     }
 
-    T& operator[](size_t pos) {
-        return _ptr[pos];
-    }
+    T &operator[](size_t pos) { return _ptr[pos]; }
 };
 } // namespace Easy
