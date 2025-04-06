@@ -30,6 +30,7 @@ inline const char *to_str(EasyDev dev) {
         return "CPU";
     if (dev == EasyDev::CUDA)
         return "CUDA";
+    return "UNKNOWN";
 }
 
 template <typename T> class EasyPtr {
