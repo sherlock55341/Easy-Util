@@ -167,6 +167,39 @@ template <typename T> class EasyPtr {
                                   __builtin_LINE());
     }
 
+    void from(T *src, size_t N, EasyDev src_dev) const {
+        T *dst = _ptr;
+        if (src == nullptr) {
+            printf("[Memcpy Src Error] : You do not hold a slice of memory at "
+                   "%s:%d\n",
+                   __builtin_FILE(), __builtin_LINE());
+            exit(-1);
+        }
+        if (dst == nullptr) {
+            printf("[Memcpy Dst Error] : You do not hold a slice of memory at "
+                   "%s:%d\n",
+                   __builtin_FILE(), __builtin_LINE());
+            exit(-1);
+        }
+        if (_size != N) {
+            printf("[Memcpy Size Error] : Src and dst have different sizes at "
+                   "%s:%d\n",
+                   __builtin_FILE(), __builtin_LINE());
+            exit(-1);
+        }
+        if (_dev == EasyDev::CPU && src_dev == EasyDev::CPU)
+            memcpy(dst, src, sizeof(T) * _size);
+        if (_dev == EasyDev::CUDA && src_dev == EasyDev::CUDA)
+            easyCudaMemcpyD2DBase(dst, src, sizeof(T) * _size, __builtin_FILE(),
+                                  __builtin_LINE());
+        if (_dev == EasyDev::CUDA && src_dev == EasyDev::CPU)
+            easyCudaMemcpyH2DBase(dst, src, sizeof(T) * _size, __builtin_FILE(),
+                                  __builtin_LINE());
+        if (_dev == EasyDev::CPU && src_dev == EasyDev::CUDA)
+            easyCudaMemcpyD2HBase(dst, src, sizeof(T) * _size, __builtin_FILE(),
+                                  __builtin_LINE());
+    }
+
     T read(size_t pos) const {
         if (_ptr == nullptr) {
             printf("[Read Error] : You do not hold a slice of memory at "
