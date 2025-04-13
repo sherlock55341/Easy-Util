@@ -161,10 +161,10 @@ template <typename T> class EasyPtr {
             easyCudaMemcpyD2DBase(dst, src, sizeof(T) * _size, __builtin_FILE(),
                                   __builtin_LINE());
         if (_dev == EasyDev::CUDA && other._dev == EasyDev::CPU)
-            easyCudaMemcpyD2HBase(dst, src, sizeof(T) * _size, __builtin_FILE(),
+            easyCudaMemcpyH2DBase(dst, src, sizeof(T) * _size, __builtin_FILE(),
                                   __builtin_LINE());
         if (_dev == EasyDev::CPU && other._dev == EasyDev::CUDA)
-            easyCudaMemcpyH2DBase(dst, src, sizeof(T) * _size, __builtin_FILE(),
+            easyCudaMemcpyD2HBase(dst, src, sizeof(T) * _size, __builtin_FILE(),
                                   __builtin_LINE());
     }
 
